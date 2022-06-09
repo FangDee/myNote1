@@ -3970,6 +3970,10 @@ public class WebConfig  implements WebMvcConfigurer {
 
 作用：==根据请求的url、method等信息查找Handler，也就是我们编写的Controller，即控制器方法==，**将请求和控制器方法进行映射**，**处理器映射器来找方法**
 
+>handlerMapping:DispatcherServlet通过handlerMapping，为请求的url指向对应的controll，也就是在浏览器地址栏输入url请求之后，servlet.xml的<bean>节点会把请求映射到到对应的controll
+
+![](SpringMVC框架.assets/Snipaste_2022-06-09_15-14-15.png)
+
 - Handler：**处理器**，需要工程师开发，指的就是我们写的Controller,控制器！
 
 作用：==在DispatcherServlet的控制下Handler对具体的用户请求进行处理==
@@ -3977,6 +3981,23 @@ public class WebConfig  implements WebMvcConfigurer {
 - HandlerAdapter：**处理器适配器**，不需要工程师开发，由框架提供
 
 作用：==通过HandlerAdapter对处理器（控制器方法）进行执行==，HandlerMapping找到了控制器方法以后，由**处理器适配器来执行方法**
+
+>​         HandlerAdapter字面上的意思就是处理适配器，它的作用用一句话概括就是调用具体的方法对用户发来的请求来进行处理。当handlerMapping获取到执行请求的controller时，DispatcherServlte会根据controller对应的controller类型来调用相应的HandlerAdapter来进行处理。
+>
+>**1.HandlerAdapter的注册**:
+>
+>DispatcherServlte会根据配置文件信息注册HandlerAdapter，如果在配置文件中没有配置，那么DispatcherServlte会获取HandlerAdapter的默认配置，如果是读取默认配置的话，DispatcherServlte会读取DispatcherServlte.properties文件,该文件中配置了三种HandlerAdapter：HttpRequestHandlerAdapter，SimpleControllerHandlerAdapter和AnnotationMethodHandlerAdapter。DispatcherServlte会将这三个HandlerAdapter对象存储到它的handlerAdapters这个集合属性中，这样就完成了HandlerAdapter的注册。
+>
+>**2.HandlerAdapter的执行**:
+>
+>DispatcherServlte会根据handlerMapping传过来的controller与已经注册好了的HandlerAdapter一一匹配，看哪一种HandlerAdapter是支持该controller类型的，如果找到了其中一种HandlerAdapter是支持传过来的controller类型，那么该HandlerAdapter会调用自己的handle方法，handle方法运用java的反射机制执行controller的具体方法来获得ModelAndView,例如SimpleControllerHandlerAdapter是支持实现了controller接口的控制器，如果自己写的控制器实现了controller接口，那么SimpleControllerHandlerAdapter就会去执行自己写控制器中的具体方法来完成请求。
+
+~~~
+   处理器不只有Controller这一种。还有HttpRequestHandler，Servlet等处理器。下面来介绍一下几种适配器对应的处理器以及这些处理器的作用
+   1. AnnotationMethodHandlerAdapter主要是适配注解类处理器，注解类处理器就是我们经常使用的@Controller的这类处理器
+   2. HttpRequestHandlerAdapter主要是适配静态资源处理器，静态资源处理器就是实现了HttpRequestHandler接口的处理器，这类处理器的作用是处理通过SpringMVC来访问的静态资源的请求。    3.SimpleControllerHandlerAdapter是Controller处理适配器，适配实现了Controller接口或Controller接口子类的处理器，比如我们经常自己写的Controller来继承MultiActionController.
+   4.SimpleServletHandlerAdapter是Servlet处理适配器,适配实现了Servlet接口或Servlet的子类的处理器，我们不仅可以在web.xml里面配置Servlet，其实也可以用SpringMVC来配置Servlet，不过这个适配器很少用到，而且SpringMVC默认的适配器没有他，默认的是前面的三种。
+~~~
 
 - ViewResolver：**视图解析器**，不需要工程师开发，由框架提供
 
