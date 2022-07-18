@@ -1,0 +1,25 @@
+
+
+镜像相关操作:
+
+	1.从中心仓库拉取镜像  latest(最新版本)  tomcat
+
+		docker pull 镜像名称  ==  docker pull 镜像名称:latest
+		docker pull 镜像名称:指定版本 如: docker pull tomcat:8.0
+
+	2.查看本地仓库中镜像
+		docker images   ==  docker image ls
+		docker images -a  查看所有镜像  默认(也是查看所有)
+		docker images -q  查看所有镜像id 
+		docker images 镜像名    查看所有和镜像名相关的镜像
+
+		REPOSITORY(镜像名称)   TAG(版本好)       IMAGE ID (镜像id)      CREATED (镜像创建时间)       SIZE  (镜像大小)
+		tomcat       latest    710ec5c56683   5 days ago    668MB
+		tomcat       8.0       ef6a7c98d192   2 years ago   356MB
+
+	3.搜索镜像
+		docker search redis
+
+	4.删除镜像
+		docker image rm 镜像名:版本号(latest)|镜像id  == docker rmi  镜像id|镜像名称
+		docker image rm -f(强制删除) 镜像名|镜像id    == docker rmi -f 镜像id|名称
